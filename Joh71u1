@@ -1,0 +1,2412 @@
+-- ✅ Game Lock: Only allow in supported game 
+local allowedPlaceId = 109983668079237
+if game.PlaceId ~= allowedPlaceId then
+    game.Players.LocalPlayer:Kick("❌ This Game Is Not Supported")
+    return
+end
+
+-- 🧹 Destroy old GUI if it exists
+local old = game.CoreGui:FindFirstChild("WindUI_Main")
+if old then
+    old:Destroy()
+end
+
+-- 🌐 Load WindUI
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+-- 🎨 Add and Set Theme
+WindUI:AddTheme({
+    Name = "NeonDark",
+    Accent = "#7f5af0",
+    Outline = "#2d2e35",
+    Text = "#ffffff",
+    Placeholder = "#9ca3af",
+    Background = "#0f0f14",
+    Button = "#3b82f6",
+    Icon = "#a3aed0"
+})
+WindUI:SetTheme("NeonDark")
+WindUI:GetTransparency(true)
+
+-- 🪟 Popup to control GUI opening
+WindUI:Popup({
+    Title = "LoxForgeUI",
+    Icon = "info",
+    Content = "Steal A Brainrot",
+    Buttons = {
+        {
+            Title = "Cancel",
+            Callback = function() end,
+            Variant = "Tertiary",
+        },
+        {
+            Title = "Continue",
+            Icon = "arrow-right",
+            Callback = function()
+                -- 🪟 Create Window only when Continue is clicked
+                local Window = WindUI:CreateWindow({
+                    Title = "LoxForgeUI",
+                    Icon = "snowflake",
+                    Author = "Steal A Brainrot",
+                    Folder = "Main",
+                    Size = UDim2.fromOffset(580, 460),
+                    Transparent = true,
+                    Theme = "NeonDark",
+                    Resizable = true,
+                    SideBarWidth = 200,
+                    Background = "",
+                    BackgroundImageTransparency = 0.42,
+                    HideSearchBar = false,
+                    ScrollBarEnabled = false,
+                    User = {
+                        Enabled = true,
+                        Anonymous = false,
+                        Callback = function()
+                            print("User profile clicked")
+                        end,
+                    },
+                })
+
+                -- 🌍 Universal Tab
+                local Section = Window:Section({ Title = "Main" })
+                local Tab = Section:Tab({
+                    Title = "Universal",
+                    Icon = "globe",
+                    Locked = false,
+                })
+
+                local UniversalHub = Tab:Section({
+                    Title = "Universal Hub",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                Tab:Button({
+                    Title = "InDex Hub",
+                    Desc = "Load IndexHub legacy mobile GUI",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Sarfaraz272/LoxForgeUI-/refs/heads/main/Protected_5263752790912791.lua.txt"))()
+                    end,
+                })
+
+                Tab:Button({
+                    Title = "ArbixHub",
+                    Desc = "Load ArbixHub GUI",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Youifpg/Steal-a-Brianrot/refs/heads/main/ArbixHubBEST.lua"))()
+                    end,
+                })
+
+                Tab:Button({
+                    Title = "The Lemon Hub",
+                    Desc = "Premium utilities and powerful automation tools",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ffdfeadf0af798741806ea404682a938.lua"))()
+                    end,
+                })
+
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+
+                local LocalPlayer = Players.LocalPlayer
+                local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+                local Humanoid = Character:WaitForChild("Humanoid")
+
+                local godModeEnabled = false
+                local godModeConnection = nil
+
+                -- God Mode Logic
+                local function startGodMode()
+                    if godModeConnection then godModeConnection:Disconnect() end
+
+                    godModeConnection = RunService.Heartbeat:Connect(function()
+                        if godModeEnabled and Humanoid and Humanoid.Health < Humanoid.MaxHealth then
+                            Humanoid.Health = Humanoid.MaxHealth
+                        end
+                    end)
+
+                    Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                        if godModeEnabled and Humanoid.Health < Humanoid.MaxHealth then
+                            Humanoid.Health = Humanoid.MaxHealth
+                        end
+                    end)
+                end
+
+                -- Handle Character Respawn
+                LocalPlayer.CharacterAdded:Connect(function(char)
+                    Character = char
+                    Humanoid = char:WaitForChild("Humanoid")
+                    if godModeEnabled then
+                        startGodMode()
+                    end
+                end)
+
+                -- UI Toggle Setup
+                local Toggle = Tab:Toggle({
+                    Title = "God Mode",
+                    Desc = "Make You Impossible To Get Killed",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state) 
+                        godModeEnabled = state
+                        if state then
+                            print("[✔] God Mode Enabled")
+                            startGodMode()
+                        else
+                            print("[✖] God Mode Disabled")
+                            if godModeConnection then
+                                godModeConnection:Disconnect()
+                                godModeConnection = nil
+                            end
+                        end
+                    end
+                })
+
+                -- 🎯 ESP Section
+                local AnotherSection = Tab:Section({
+                    Title = "Another",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                local infiniteJump = false
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                local Humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+                LocalPlayer.CharacterAdded:Connect(function(char)
+                    char:WaitForChild("Humanoid")
+                    Humanoid = char:FindFirstChildOfClass("Humanoid")
+                end)
+
+                UserInputService.JumpRequest:Connect(function()
+                    if infiniteJump and Humanoid and Humanoid:GetState() ~= Enum.HumanoidStateType.Seated then
+                        Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                        local HRP = Humanoid.Parent and Humanoid.Parent:FindFirstChild("HumanoidRootPart")
+                        if HRP then
+                            HRP.AssemblyLinearVelocity = Vector3.new(HRP.AssemblyLinearVelocity.X, 50, HRP.AssemblyLinearVelocity.Z)
+                            task.wait(0.03)
+                            HRP.AssemblyLinearVelocity = Vector3.new(HRP.AssemblyLinearVelocity.X, 50, HRP.AssemblyLinearVelocity.Z)
+                        end
+                    end
+                end)
+
+                local Toggle = Tab:Toggle({
+                    Title = "Infinite Jump",
+                    Desc = "Jump infinitely in the air",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state) 
+                        infiniteJump = state
+                        print("Infinite Jump Toggled: " .. tostring(state))
+                    end
+                })
+
+                -- 🔎 ESP Drawing Setup
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+                local CoreGui = game:GetService("CoreGui")
+                local Camera = workspace.CurrentCamera
+                local LocalPlayer = Players.LocalPlayer
+
+                _G.PlayerBox = {}
+
+                local box = Drawing.new("Square")
+                box.Color = Color3.fromRGB(30, 30, 30)
+                box.Filled = true
+                box.Thickness = 0
+                box.Transparency = 0.8
+                box.Visible = false
+                table.insert(_G.PlayerBox, box)
+
+                local outline = Drawing.new("Square")
+                outline.Color = Color3.fromRGB(80, 80, 80)
+                outline.Filled = false
+                outline.Thickness = 2
+                outline.Transparency = 0.9
+                outline.Visible = false
+                table.insert(_G.PlayerBox, outline)
+
+                local text = Drawing.new("Text")
+                text.Size = 19
+                text.Center = true
+                text.Outline = true
+                text.OutlineColor = Color3.new(0, 0, 0)
+                text.Color = Color3.new(1, 1, 1)
+                text.Transparency = 0.95
+                text.Visible = false
+                table.insert(_G.PlayerBox, text)
+
+                -- 📦 BillboardGui & Highlight ESP
+                local ESPFolder = CoreGui:FindFirstChild("CleanESP") or Instance.new("Folder", CoreGui)
+                ESPFolder.Name = "CleanESP"
+
+                local function removeESP(player)
+                    local tag = ESPFolder:FindFirstChild(player.Name)
+                    if tag then tag:Destroy() end
+                end
+
+                local function setupESP(player)
+                    local function createTag()
+                        local char = player.Character
+                        if not char then return end
+                        local hrp = char:FindFirstChild("HumanoidRootPart")
+                        if not hrp then return end
+
+                        removeESP(player)  
+
+                        local folder = Instance.new("Folder", ESPFolder)  
+                        folder.Name = player.Name  
+
+                        local gui = Instance.new("BillboardGui", folder)  
+                        gui.Adornee = hrp  
+                        gui.Size = UDim2.new(0, 120, 0, 32)  
+                        gui.StudsOffset = Vector3.new(0, -4.2, 0)  
+                        gui.AlwaysOnTop = true  
+                        gui.Enabled = false  
+
+                        local nameLabel = Instance.new("TextLabel", gui)  
+                        nameLabel.Size = UDim2.new(1, 0, 0.5, 0)  
+                        nameLabel.Position = UDim2.new(0, 0, 0, 0)  
+                        nameLabel.BackgroundTransparency = 1  
+                        nameLabel.Text = player.Name  
+                        nameLabel.TextColor3 = Color3.new(1, 1, 1)  
+                        nameLabel.TextStrokeTransparency = 0.5  
+                        nameLabel.Font = Enum.Font.SourceSansBold  
+                        nameLabel.TextScaled = true  
+
+                        local distLabel = Instance.new("TextLabel", gui)  
+                        distLabel.Size = UDim2.new(1, 0, 0.5, 0)  
+                        distLabel.Position = UDim2.new(0, 0, 0.5, 0)  
+                        distLabel.BackgroundTransparency = 1  
+                        distLabel.TextColor3 = Color3.new(1, 1, 1)  
+                        distLabel.TextStrokeTransparency = 0.5  
+                        distLabel.Font = Enum.Font.SourceSans  
+                        distLabel.TextScaled = true  
+
+                        local highlight = Instance.new("Highlight", folder)  
+                        highlight.Adornee = char  
+                        highlight.FillTransparency = 1  
+                        highlight.OutlineColor = Color3.fromRGB(0, 255, 0)  
+                        highlight.OutlineTransparency = 0  
+                        highlight.Enabled = false  
+
+                        RunService.RenderStepped:Connect(function()  
+                            if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then  
+                                removeESP(player)  
+                                return  
+                            end  
+
+                            local localChar = LocalPlayer.Character  
+                            if localChar and localChar:FindFirstChild("HumanoidRootPart") then  
+                                local dist = (localChar.HumanoidRootPart.Position - hrp.Position).Magnitude  
+                                distLabel.Text = "(" .. math.floor(dist) .. " studs)"  
+                            end  
+                        end)  
+                    end  
+
+                    if player.Character then createTag() end  
+                    player.CharacterAdded:Connect(function()  
+                        task.wait(0.5)  
+                        createTag()  
+                    end)
+                end
+
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer then
+                        setupESP(player)
+                    end
+                end
+
+                Players.PlayerAdded:Connect(function(player)
+                    if player ~= LocalPlayer then
+                        setupESP(player)
+                    end
+                end)
+
+                -- ⏰ Display Clock + Player Count
+                RunService.RenderStepped:Connect(function()
+                    local screen = Camera.ViewportSize
+                    local playerCount = #Players:GetPlayers()
+                    local timeStr = os.date("%H:%M:%S")
+                    local displayText = string.format("Players: %d    |    Time: %s", playerCount, timeStr)
+                    text.Text = displayText
+
+                    local textSize = text.TextBounds  
+                    local width = textSize.X + 32  
+                    local height = textSize.Y + 16  
+                    local posX = (screen.X - width) / 2  
+                    local posY = 24  
+
+                    box.Size = Vector2.new(width, height)  
+                    box.Position = Vector2.new(posX, posY)  
+                    outline.Size = box.Size  
+                    outline.Position = box.Position  
+                    text.Position = Vector2.new(screen.X / 2, posY + (height - textSize.Y) / 2)
+                end)
+
+                -- 🔘 ESP Toggle
+                local espEnabled = false
+                Tab:Toggle({
+                    Title = "ESP",
+                    Desc = "Toggle ESP for all players",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        espEnabled = state
+                        for _, obj in ipairs(_G.PlayerBox or {}) do
+                            if obj then obj.Visible = state end
+                        end
+                        local folder = CoreGui:FindFirstChild("CleanESP")
+                        if folder then
+                            for _, tag in ipairs(folder:GetChildren()) do
+                                for _, obj in ipairs(tag:GetChildren()) do
+                                    if obj:IsA("BillboardGui") or obj:IsA("Highlight") then
+                                        obj.Enabled = state
+                                    end
+                                end
+                            end
+                        end
+                        print("ESP " .. (state and "Enabled" or "Disabled"))
+                    end,
+                })
+
+                -- 🔧 Utility Buttons
+                Tab:Button({
+                    Title = "InfiniteYield",
+                    Desc = "Admin command GUI",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source', true))()
+                    end,
+                })
+
+                Tab:Button({
+                    Title = "NameLess Admin",
+                    Desc = "Powerful admin toolset",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
+                    end,
+                })
+
+                -- 🧩 Core Tab
+                local Tab = Section:Tab({
+                    Title = "Core",
+                    Icon = "cpu",
+                    Locked = false,
+                })
+
+                local AutoCoreSection = Tab:Section({ 
+                    Title = "AutoCore",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+                
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local RequestRebirth = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RF/Rebirth/RequestRebirth")
+
+                local autoRebirthEnabled = false
+                local rebirthDelay = 0.7 -- default (70ms from slider)
+
+                -- Start rebirth loop
+                task.spawn(function()
+                    while true do
+                        if autoRebirthEnabled then
+                            local success, err = pcall(function()
+                                RequestRebirth:InvokeServer()
+                            end)
+                            if not success then
+                                warn("Rebirth failed: " .. tostring(err))
+                            end
+                        end
+                        task.wait(rebirthDelay)
+                    end
+                end)
+
+                -- UI: Toggle Auto Rebirth
+                local Toggle = Tab:Toggle({
+                    Title = "Auto Rebirth",
+                    Desc = "Toggles automatic rebirths",
+                    Default = false,
+                    Callback = function(state)
+                        autoRebirthEnabled = state
+                        print("Auto Rebirth is now " .. (state and "ON" or "OFF"))
+                    end
+                })
+
+                -- UI: Slider to control speed (converted from ms to seconds)
+                local Slider = Tab:Slider({
+                    Title = "Rebirth Speed (ms)",
+                    Step = 10,
+                    Value = {
+                        Min = 20,
+                        Max = 120,
+                        Default = 70,
+                    },
+                    Callback = function(value)
+                        rebirthDelay = value / 1000 -- convert ms to seconds
+                        print("Rebirth delay set to " .. rebirthDelay .. " seconds")
+                    end
+                })
+
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local SpinEvent = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RE/CandyEventService/Spin")
+
+                local spinning = false
+                local spinDelay = 2 -- seconds between spins
+
+                -- Auto-spin function
+                local function autoSpin()
+                    task.spawn(function()
+                        while spinning do
+                            SpinEvent:FireServer()
+                            print("Spun at", os.time())
+                            task.wait(spinDelay)
+                        end
+                    end)
+                end
+
+                -- Toggle Setup
+                local Toggle = Tab:Toggle({
+                    Title = "Auto Spin",
+                    Desc = "Automatically spins candy event",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        print("Toggle Activated: " .. tostring(state))
+                        spinning = state
+                        if spinning then
+                            autoSpin()
+                        end
+                    end
+                })
+
+                --// Services
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+                --// Remote Reference
+                local SellRemote = ReplicatedStorage:WaitForChild("Packages")
+                    :WaitForChild("Net")
+                    :WaitForChild("RE/PlotService/Sell")
+
+                --// Config
+                local START_SLOT = 1
+                local END_SLOT = 17
+                local SELL_DELAY = 0.1 -- Delay between selling each slot
+                local LOOP_DELAY = 5   -- Delay between full auto-sell loops
+
+                --// State Variable
+                local autoSelling = false
+
+                --// Auto-Sell Function
+                local function sellAllSlots()
+                    for slot = START_SLOT, END_SLOT do
+                        SellRemote:FireServer(slot)
+                        task.wait(SELL_DELAY)
+                    end
+                end
+
+                --// Toggle Function (Hooked to UI)
+                local Toggle = Tab:Toggle({
+                    Title = "Auto-Sell",
+                    Desc = "Automatically sells from slots 1 to 17",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        autoSelling = state
+                        print("Auto-Sell Toggle: " .. tostring(state))
+
+                        if state then
+                            task.spawn(function()
+                                while autoSelling do
+                                    sellAllSlots()
+                                    task.wait(LOOP_DELAY)
+                                end
+                            end)
+                        end
+                    end
+                })
+
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Net = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net")
+                local RequestBuy = Net:WaitForChild("RF/CoinsShopService/RequestBuy")
+
+                local allItems = {
+                    {Name = "Slap", ID = "Basic Slap"},
+                    {Name = "Iron Slap", ID = "Iron Slap"},
+                    {Name = "Gold Slap", ID = "Gold Slap"},
+                    {Name = "Diamond Slap", ID = "Diamond Slap"},
+                    {Name = "Emerald Slap", ID = "Emerald Slap"},
+                    {Name = "Ruby Slap", ID = "Ruby Slap"},
+                    {Name = "Dark Matter Slap", ID = "Dark Matter Slap"},
+                    {Name = "Flame Slap", ID = "Flame Slap"},
+                    {Name = "Nuclear Slap", ID = "Nuclear Slap"},
+                    {Name = "Galaxy Slap", ID = "Galaxy Slap"},
+                    {Name = "Trap", ID = "Trap"},
+                    {Name = "Bee Launcher", ID = "Bee Launcher"},
+                    {Name = "Rage Table", ID = "Rage Table"},
+                    {Name = "Grapple Hook", ID = "Grapple Hook"},
+                    {Name = "Taser Gun", ID = "Taser Gun"},
+                    {Name = "Boogie Bomb", ID = "Boogie Bomb"},
+                    {Name = "Medusa's Head", ID = "Medusa's Head"},
+                    {Name = "Web Slinger", ID = "Web Slinger"},
+                    {Name = "Quantum Cloner", ID = "Quantum Cloner"},
+                    {Name = "All Seeing Sentry", ID = "All Seeing Sentry"},
+                    {Name = "Laser Cape", ID = "Laser Cape"},
+                    {Name = "Speed Coil", ID = "Speed Coil"},
+                    {Name = "Gravity Coil", ID = "Gravity Coil"},
+                    {Name = "Coil Combo", ID = "Coil Combo"},
+                    {Name = "Invisibility Cloak", ID = "Invisibility Cloak"},
+                    {Name = "Rainbowrath Sword", ID = "Rainbowrath Sword"},
+                    {Name = "Glitched Slap", ID = "Glitched Slap"},
+                    {Name = "Body Swap Potion", ID = "Body Swap Potion"},
+                    {Name = "Splatter Slap", ID = "Splatter Slap"},
+                    {Name = "Paintball Gun", ID = "Paintball Gun"},
+                }
+
+                local itemNames = {}
+                for _, item in ipairs(allItems) do
+                    table.insert(itemNames, item.Name)
+                end
+
+                -- 🔘 Single-select Auto Buy Dropdown with title changed
+                local Dropdown = Tab:Dropdown({
+                    Title = "Auto Buys", -- 🔁 Title changed here
+                    Values = itemNames,
+                    Value = itemNames[1], -- First item is default
+                    Callback = function(selectedName)
+                        for _, item in ipairs(allItems) do
+                            if item.Name == selectedName then
+                                task.spawn(function()
+                                    local success, result = pcall(function()
+                                        return RequestBuy:InvokeServer(item.ID)
+                                    end)
+                                    if success then
+                                        print("[✔] Bought:", item.Name)
+                                    else
+                                        warn("[✖] Failed to buy:", item.Name, "| Error:", result)
+                                    end
+                                end)
+                                break
+                            end
+                        end
+                    end
+                })
+
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Net = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net")
+                local RequestBuy = Net:WaitForChild("RF/CoinsShopService/RequestBuy")
+
+                local allItems = {
+                    {Name = "Slap", ID = "Basic Slap"},
+                    {Name = "Iron Slap", ID = "Iron Slap"},
+                    {Name = "Gold Slap", ID = "Gold Slap"},
+                    {Name = "Diamond Slap", ID = "Diamond Slap"},
+                    {Name = "Emerald Slap", ID = "Emerald Slap"},
+                    {Name = "Ruby Slap", ID = "Ruby Slap"},
+                    {Name = "Dark Matter Slap", ID = "Dark Matter Slap"},
+                    {Name = "Flame Slap", ID = "Flame Slap"},
+                    {Name = "Nuclear Slap", ID = "Nuclear Slap"},
+                    {Name = "Galaxy Slap", ID = "Galaxy Slap"},
+                    {Name = "Trap", ID = "Trap"},
+                    {Name = "Bee Launcher", ID = "Bee Launcher"},
+                    {Name = "Rage Table", ID = "Rage Table"},
+                    {Name = "Grapple Hook", ID = "Grapple Hook"},
+                    {Name = "Taser Gun", ID = "Taser Gun"},
+                    {Name = "Boogie Bomb", ID = "Boogie Bomb"},
+                    {Name = "Medusa's Head", ID = "Medusa's Head"},
+                    {Name = "Web Slinger", ID = "Web Slinger"},
+                    {Name = "Quantum Cloner", ID = "Quantum Cloner"},
+                    {Name = "All Seeing Sentry", ID = "All Seeing Sentry"},
+                    {Name = "Laser Cape", ID = "Laser Cape"},
+                    {Name = "Speed Coil", ID = "Speed Coil"},
+                    {Name = "Gravity Coil", ID = "Gravity Coil"},
+                    {Name = "Coil Combo", ID = "Coil Combo"},
+                    {Name = "Invisibility Cloak", ID = "Invisibility Cloak"},
+                    {Name = "Rainbowrath Sword", ID = "Rainbowrath Sword"},
+                    {Name = "Glitched Slap", ID = "Glitched Slap"},
+                    {Name = "Body Swap Potion", ID = "Body Swap Potion"},
+                    {Name = "Splatter Slap", ID = "Splatter Slap"},
+                    {Name = "Paintball Gun", ID = "Paintball Gun"},
+                }
+
+                local Button = Tab:Button({
+                    Title = "Auto Buy All",
+                    Desc = "Buys every item in the shop automatically",
+                    Locked = false,
+                    Callback = function()
+                        for _, item in ipairs(allItems) do
+                            task.spawn(function()
+                                local success, result = pcall(function()
+                                    return RequestBuy:InvokeServer(item.ID)
+                                end)
+                                if success then
+                                    print("[✔] Bought:", item.Name)
+                                else
+                                    warn("[✖] Failed to buy:", item.Name, "| Error:", result)
+                                end
+                            end)
+                            task.wait(0.2)
+                        end
+                    end
+                })
+
+                local EssentialsSection = Tab:Section({
+                    Title = "Essentials",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+                
+                local Players = game:GetService("Players")
+                local StarterGui = game:GetService("StarterGui")
+
+                local ResetButton = Tab:Button({
+                    Title = "Reset Character",
+                    Desc = "Forcefully resets your character",
+                    Locked = false,
+                    Callback = function()
+                        local player = Players.LocalPlayer
+                        if not player then
+                            warn("LocalPlayer not found.")
+                            return
+                        end
+
+                        local character = player.Character or player.CharacterAdded:Wait()
+                        local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+                        if humanoid then
+                            humanoid.Health = 0
+
+                            -- Optional: Show a notification
+                            pcall(function()
+                                StarterGui:SetCore("SendNotification", {
+                                    Title = "Reset",
+                                    Text = "Your character has been reset.",
+                                    Duration = 2,
+                                })
+                            end)
+
+                            print("Character reset successfully.")
+                        else
+                            warn("Humanoid not found in character.")
+                        end
+                    end
+                })
+
+                --// Waypoint System
+                local Players = game:GetService("Players")
+                local player = Players.LocalPlayer
+                _G.waypoint = nil
+
+                Tab:Button({
+                    Title = "Create Waypoint",
+                    Desc = "Save your current position",
+                    Locked = false,
+                    Callback = function()
+                        local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            _G.waypoint = hrp.Position
+                            pcall(function()
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "Waypoint Created",
+                                    Text = "Your position has been saved.",
+                                    Duration = 2
+                                })
+                            end)
+                            print("Waypoint saved at: " .. tostring(_G.waypoint))
+                        else
+                            warn("HumanoidRootPart not found!")
+                            pcall(function()
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "Waypoint Error",
+                                    Text = "Failed to save waypoint: Character not found.",
+                                    Duration = 3
+                                })
+                            end)
+                        end
+                    end
+                })
+
+                --// Instant Steal
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+
+                local player = Players.LocalPlayer
+                local hrp = player.Character or player.CharacterAdded:Wait():WaitForChild("HumanoidRootPart")
+                local flying = false
+                local floatSpeed = _G.floatSpeed or 45
+                local bodyVel
+                local flyConnection = nil
+
+                Tab:Button({
+                    Title = "Instant Steal",
+                    Desc = "Float to your saved waypoint",
+                    Locked = false,
+                    Callback = function()
+                        local waypoint = _G.waypoint
+                        if not waypoint then
+                            warn("No waypoint saved!")
+                            pcall(function()
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "Waypoint Error",
+                                    Text = "No waypoint saved yet. Create one first!",
+                                    Duration = 3
+                                })
+                            end)
+                            return
+                        end
+
+                        if not flying then
+                            flying = true
+                            bodyVel = Instance.new("BodyVelocity", hrp)
+                            bodyVel.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+                            bodyVel.Velocity = Vector3.new(0, 0, 0) -- Initialize to avoid jitter
+
+                            flyConnection = RunService.RenderStepped:Connect(function()
+                                if flying and hrp and waypoint then
+                                    local dir = (waypoint - hrp.Position).Unit
+                                    bodyVel.Velocity = dir * floatSpeed
+
+                                    if (hrp.Position - waypoint).Magnitude < 5 then
+                                        flying = false
+                                        if bodyVel then bodyVel:Destroy() end
+                                        if flyConnection then flyConnection:Disconnect() end
+                                        flyConnection = nil
+                                        pcall(function()
+                                            game.StarterGui:SetCore("SendNotification", {
+                                                Title = "Arrived",
+                                                Text = "You reached the waypoint.",
+                                                Duration = 2
+                                            })
+                                        end)
+                                    end
+                                end
+                            end)
+                        else
+                            flying = false
+                            if bodyVel then bodyVel:Destroy() end
+                            if flyConnection then flyConnection:Disconnect() end
+                            flyConnection = nil
+                        end
+                    end
+                })
+
+                --// Float Forward
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+
+                local player = Players.LocalPlayer
+                local hrp = player.Character or player.CharacterAdded:Wait():WaitForChild("HumanoidRootPart")
+                local manualFlying = false
+                local floatSpeed = _G.floatSpeed or 45
+                local bodyVel
+                local floatConnection = nil
+
+                Tab:Button({
+                    Title = "Float Forward",
+                    Desc = "Fly straight forward manually",
+                    Locked = false,
+                    Callback = function()
+                        if not manualFlying then
+                            manualFlying = true
+                            bodyVel = Instance.new("BodyVelocity", hrp)
+                            bodyVel.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+                            bodyVel.Velocity = Vector3.new(0, 0, 0) -- Initialize to avoid jitter
+
+                            floatConnection = RunService.RenderStepped:Connect(function()
+                                if manualFlying and hrp then
+                                    bodyVel.Velocity = hrp.CFrame.LookVector * floatSpeed
+                                end
+                            end)
+                        else
+                            manualFlying = false
+                            if bodyVel then bodyVel:Destroy() end
+                            if floatConnection then floatConnection:Disconnect() end
+                            floatConnection = nil
+                        end
+                    end
+                })
+
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local CoinRemote = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Net"):WaitForChild("RE/PlotService/ClaimCoins")
+
+                -- Enhanced Auto Collect Coins
+                local Toggle = Tab:Toggle({
+                    Title = "Auto Collect Coins",
+                    Desc = "Rapidly collects coins from ID 1 to 16 with retries",
+                    Default = false,
+                    Callback = function(state)
+                        _G.AutoCoinFarm = state
+                        if state then
+                            task.spawn(function()
+                                while _G.AutoCoinFarm do
+                                    local collected = 0
+                                    for i = 1, 16 do
+                                        if not _G.AutoCoinFarm then break end
+                                        local retries = 3
+                                        local success = false
+                                        for attempt = 1, retries do
+                                            local result, msg = pcall(function()
+                                                if CoinRemote then
+                                                    CoinRemote:FireServer(i)
+                                                    return true
+                                                end
+                                                return false
+                                            end)
+
+                                            if result and msg then
+                                                success = true
+                                                collected = collected + 1
+                                                break
+                                            else
+                                                warn("Failed to claim coin " .. i .. " (Attempt " .. attempt .. "): " .. tostring(msg))
+                                                task.wait(0.05)
+                                            end
+                                        end
+                                        if not success then
+                                            game.StarterGui:SetCore("SendNotification", {
+                                                Title = "Coin Collection Error",
+                                                Text = "Failed to claim Coin ID: " .. i .. " after " .. retries .. " attempts",
+                                                Duration = 2,
+                                            })
+                                        end
+                                        task.wait(0.05)
+                                    end
+                                    if collected > 0 then
+                                        game.StarterGui:SetCore("SendNotification", {
+                                            Title = "Coin Collection",
+                                            Text = "Collected " .. collected .. " coin(s) in this cycle",
+                                            Duration = 1.5,
+                                        })
+                                    end
+                                    task.wait(1)
+                                end
+                            end)
+                        else
+                            _G.AutoCoinFarm = false
+                        end
+                    end
+                })
+
+                local baseLockConnections = {}
+                local baseLockEnabled = false
+                local Camera = workspace.CurrentCamera
+
+                local function parseTime(text)
+                    return tonumber(text:match("^(%d+)s$")) or 0
+                end
+
+                local function createBaseLockESP(plot)
+                    local purchases = plot:FindFirstChild("Purchases")
+                    if not purchases then return end
+
+                    local plotBlock = purchases:FindFirstChild("PlotBlock")
+                    if not plotBlock then return end
+
+                    local main = plotBlock:FindFirstChild("Main")
+                    if not main then return end
+
+                    local gui = main:FindFirstChild("BillboardGui")
+                    if not gui then return end
+
+                    local timeLabel = gui:FindFirstChild("RemainingTime")
+                    if not timeLabel then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "BaseLockESP"
+                    esp.Adornee = main
+                    esp.StudsOffset = Vector3.new(0, 5, 0)
+                    esp.AlwaysOnTop = true
+                    esp.MaxDistance = 0
+                    esp.Size = UDim2.new(6, 0, 1.5, 0)
+                    esp.Parent = main
+
+                    local text = Instance.new("TextLabel")
+                    text.Size = UDim2.new(1, 0, 1, 0)
+                    text.BackgroundTransparency = 1
+                    text.TextColor3 = Color3.fromRGB(255, 100, 100)
+                    text.TextStrokeTransparency = 0.4
+                    text.TextStrokeColor3 = Color3.new(0, 0, 0)
+                    text.TextScaled = true
+                    text.Font = Enum.Font.SourceSansBold
+                    text.Text = "..."
+                    text.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not plot:IsDescendantOf(workspace) or not main:IsDescendantOf(plot) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+
+                        local seconds = parseTime(timeLabel.Text)
+                        text.Text = tostring(seconds) .. "s"
+
+                        local distance = (Camera.CFrame.Position - main.Position).Magnitude
+                        local scale = math.clamp(distance * 0.1, 4, 16)
+                        esp.Size = UDim2.new(scale, 0, scale * 0.25, 0)
+                    end)
+
+                    table.insert(baseLockConnections, conn)
+                end
+
+                local function enableBaseLockESP()
+                    for _, conn in ipairs(baseLockConnections) do
+                        conn:Disconnect()
+                    end
+                    baseLockConnections = {}
+
+                    for _, obj in ipairs(workspace.Plots:GetDescendants()) do
+                        if obj.Name == "BaseLockESP" then
+                            obj:Destroy()
+                        end
+                    end
+
+                    for _, plot in ipairs(workspace.Plots:GetChildren()) do
+                        createBaseLockESP(plot)
+                    end
+
+                    local conn = workspace.Plots.ChildAdded:Connect(function(newPlot)
+                        createBaseLockESP(newPlot)
+                    end)
+
+                    table.insert(baseLockConnections, conn)
+                end
+
+                local function disableBaseLockESP()
+                    for _, conn in ipairs(baseLockConnections) do
+                        conn:Disconnect()
+                    end
+                    baseLockConnections = {}
+
+                    for _, obj in ipairs(workspace.Plots:GetDescendants()) do
+                        if obj.Name == "BaseLockESP" then
+                            obj:Destroy()
+                        end
+                    end
+                end
+
+                local TeleportService = game:GetService("TeleportService")
+                local HttpService = game:GetService("HttpService")
+                local Players = game:GetService("Players")
+                local LocalPlayer = Players.LocalPlayer
+                local PlaceId = game.PlaceId
+                local CurrentJobId = game.JobId
+
+                local function getRandomServer()
+                    local cursor = ""
+                    while true do
+                        local url = "https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100" .. (cursor ~= "" and "&cursor=" .. cursor or "")
+                        local success, response = pcall(function()
+                            return HttpService:JSONDecode(game:HttpGet(url))
+                        end)
+                        
+                        if success and response and response.data then
+                            for _, server in ipairs(response.data) do
+                                if server.playing < server.maxPlayers and server.id ~= CurrentJobId then
+                                    return server.id
+                                end
+                            end
+                            cursor = response.nextPageCursor
+                            if not cursor then break end
+                        else
+                            warn("Failed to get server list:", response)
+                            break
+                        end
+                    end
+                    return nil
+                end
+
+                -- Create UI Button
+                local Button = Tab:Button({
+                    Title = "Join Random Server",
+                    Desc = "Teleport to a different public server",
+                    Locked = false,
+                    Callback = function()
+                        print("Finding a new server...")
+                        local serverId = getRandomServer()
+                        if serverId then
+                            print("Teleporting to server:", serverId)
+                            TeleportService:TeleportToPlaceInstance(PlaceId, serverId, LocalPlayer)
+                        else
+                            warn("No other server found.")
+                        end
+                    end
+                })
+
+                local Button = Tab:Button({
+                    Title = "Rejoin Server",
+                    Desc = "Reconnect to this exact server instance.",
+                    Locked = false,
+                    Callback = function()
+                        local TeleportService = game:GetService("TeleportService")
+                        local Players = game:GetService("Players")
+                        local player = Players.LocalPlayer
+
+                        if player:GetAttribute("Rejoining") then
+                            warn("Already rejoining...")
+                            return
+                        end
+                        player:SetAttribute("Rejoining", true)
+
+                        print("[Rejoin Button] Teleporting to the same server...")
+
+                        if typeof(Library) == "table" and Library.Notify then
+                            Library:Notify({
+                                Title = "Rejoining Server",
+                                Content = "You're being teleported to the same server...",
+                                Duration = 3
+                            })
+                        end
+
+                        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, player)
+
+                        task.delay(5, function()
+                            if player then
+                                player:SetAttribute("Rejoining", false)
+                            end
+                        end)
+                    end
+                })
+
+                local Players = game:GetService("Players")
+                local Button = Tab:Button({
+                    Title = "Leave Server",
+                    Desc = "Click to leave the current server",
+                    Locked = false,
+                    Callback = function()
+                        local player = Players.LocalPlayer
+                        player:Kick("Leaving server...")
+                    end
+                })
+
+                local UtilitiesSection = Tab:Section({
+                    Title = "Utilities",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                --// Services
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+
+                --// Variables
+                local lp = Players.LocalPlayer
+                local targetSpeed = 70
+                local isBoostActive = false
+                local currentHumanoid = nil
+                local enforceConnection, propertyConnection, characterConnection = nil, nil, nil
+
+                --// Function to apply and maintain speed
+                local function applySpeed(humanoid)
+                    if not humanoid then return end
+
+                    if propertyConnection then propertyConnection:Disconnect() end
+                    currentHumanoid = humanoid
+
+                    propertyConnection = humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+                        if isBoostActive and humanoid.WalkSpeed ~= targetSpeed then
+                            humanoid.WalkSpeed = targetSpeed
+                        end
+                    end)
+
+                    humanoid.WalkSpeed = targetSpeed
+                end
+
+                --// Function to start enforcing WalkSpeed
+                local function startBoostSteal()
+                    local function onCharacterAdded(character)
+                        local humanoid = character:WaitForChild("Humanoid")
+                        applySpeed(humanoid)
+                    end
+
+                    if lp.Character then
+                        onCharacterAdded(lp.Character)
+                    end
+
+                    if characterConnection then characterConnection:Disconnect() end
+                    characterConnection = lp.CharacterAdded:Connect(onCharacterAdded)
+
+                    if enforceConnection then enforceConnection:Disconnect() end
+                    enforceConnection = RunService.Heartbeat:Connect(function()
+                        local character = lp.Character
+                        if character then
+                            local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+                            if humanoid and humanoid.WalkSpeed ~= targetSpeed then
+                                humanoid.WalkSpeed = targetSpeed
+                            end
+                        end
+                    end)
+                end
+
+                --// Function to stop enforcing
+                local function stopBoostSteal()
+                    isBoostActive = false
+                    if enforceConnection then enforceConnection:Disconnect() end
+                    if propertyConnection then propertyConnection:Disconnect() end
+                    if characterConnection then characterConnection:Disconnect() end
+                    if currentHumanoid then
+                        currentHumanoid.WalkSpeed = 38
+                    end
+                end
+
+                --// 🔘 Boost Steal Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Boost Steal",
+                    Desc = "Force WalkSpeed to slider value and bypass anti-cheat.",
+                    Default = false,
+                    Callback = function(state)
+                        isBoostActive = state
+                        if state then
+                            startBoostSteal()
+                        else
+                            stopBoostSteal()
+                        end
+                    end
+                })
+
+                --// 🎚️ Speed Slider (Controls the Boost Value)
+                local Slider = Tab:Slider({
+                    Title = "WalkSpeed Control",
+                    Desc = "Adjust the speed Boost Steal will lock to.",
+                    Step = 1,
+                    Value = {
+                        Min = 20,
+                        Max = 120,
+                        Default = 46,
+                    },
+                    Callback = function(value)
+                        targetSpeed = value
+                        if isBoostActive and currentHumanoid then
+                            currentHumanoid.WalkSpeed = value
+                        end
+                    end
+                })
+
+                -- 🌐 Services
+                local Players = game:GetService("Players")
+                local Debris = game:GetService("Debris")
+                local player = Players.LocalPlayer
+
+                -- 🚀 OP HighJump Function (Safe Physics-Based)
+                local function HighJump(jumpPower)
+                    local character = player.Character or player.CharacterAdded:Wait()
+                    local hrp = character:WaitForChild("HumanoidRootPart")
+
+                    local bv = Instance.new("BodyVelocity")
+                    bv.Name = "HighJumpForce"
+                    bv.Velocity = Vector3.new(0, jumpPower, 0)
+                    bv.MaxForce = Vector3.new(0, math.huge, 0)
+                    bv.P = 200000
+                    bv.Parent = hrp
+
+                    Debris:AddItem(bv, 0.22)
+                end
+
+                -- 🎚️ Slider Control (Polished)
+                local Slider = Tab:Slider({
+                    Title = "Jump Boost",
+                    Desc = "Bypass Anti-Cheat Jump • Slide to Jump",
+                    Value = {
+                        Min = 30,
+                        Max = 150,
+                        Default = 75,
+                    },
+                    Step = 1,
+                    Callback = function(value)
+                        HighJump(value)
+                    end
+                })
+
+                local Toggle = Tab:Toggle({
+                    Title = "High Jump Boost",
+                    Desc = "Boosts your jump height and simulates low gravity",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+                        local humanoid = character:WaitForChild("Humanoid")
+                        local rootPart = character:WaitForChild("HumanoidRootPart")
+
+                        if state then
+                            humanoid.UseJumpPower = false
+                            humanoid.JumpHeight = 40
+
+                            local force = Instance.new("BodyForce")
+                            force.Name = "LowGravityForce"
+                            force.Force = Vector3.new(0, workspace.Gravity * rootPart.AssemblyMass * 0.75, 0)
+                            force.Parent = rootPart
+                        else
+                            humanoid.JumpHeight = 7.2
+                            local existing = rootPart:FindFirstChild("LowGravityForce")
+                            if existing then existing:Destroy() end
+                        end
+                    end
+                })
+
+                local AntiSection = Tab:Section({
+                    Title = "Anti",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                local antiRagdollLoop
+                local function runAntiRagdoll()
+                    if not (Character and Humanoid) then return end
+                    local root = Character:FindFirstChild("HumanoidRootPart")
+                    if root then
+                        for _, x in ipairs(Character:GetDescendants()) do
+                            if x:IsA("BallSocketConstraint") or x:IsA("HingeConstraint") then
+                                Humanoid.PlatformStand = true
+                                root.Anchored = true
+                                task.delay(1, function()
+                                    if Humanoid then Humanoid.PlatformStand = false end
+                                    if root then root.Anchored = false end
+                                end)
+                                break
+                            end
+                        end
+                    end
+                end
+
+                local function enableAntiRagdoll()
+                    if antiRagdollLoop then return end
+                    antiRagdollLoop = game:GetService("RunService").Heartbeat:Connect(runAntiRagdoll)
+                end
+
+                local function disableAntiRagdoll()
+                    if antiRagdollLoop then
+                        antiRagdollLoop:Disconnect()
+                        antiRagdollLoop = nil
+                    end
+                end
+
+                local Toggle = Tab:Toggle({
+                    Title = "Anti Ragdoll",
+                    Desc = "Prevents ragdoll effects from tools or traps.",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        antiRagdollEnabled = state
+                        if state then
+                            enableAntiRagdoll()
+                            print("Anti Ragdoll Enabled")
+                        else
+                            disableAntiRagdoll()
+                            print("Anti Ragdoll Disabled")
+                        end
+                    end
+                })
+
+                local trapDisablerRunning = false
+
+                local Toggle = Tab:Toggle({
+                    Title = "Anti Trap",
+                    Desc = "Automatically destroys all trap objects every 2 seconds",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state) 
+                        trapDisablerRunning = state
+                        print("Anti Trap Toggled: " .. tostring(state))
+
+                        if state then
+                            task.spawn(function()
+                                while trapDisablerRunning do
+                                    local removed = 0
+                                    for _, model in pairs(workspace:GetDescendants()) do
+                                        if model:IsA("Model") and model.Name == "Trap" then
+                                            model:Destroy()
+                                            removed += 1
+                                        end
+                                    end
+                                    if removed > 0 then
+                                        print("[Anti Trap] Removed " .. removed .. " trap(s).")
+                                    end
+                                    task.wait(2)
+                                end
+                            end)
+                        end
+                    end
+                })
+                
+                local Button = Tab:Button({
+                    Title = "Anti Kick",
+                    Desc = "Executes Anti Kick script from GitHub",
+                    Locked = false,
+                    Callback = function()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Sarfaraz272/LoxForgeUI-/refs/heads/main/Steal%20a%20Brainrot%20No%20False%20Kick.lua%20(1).txt"))()
+                    end
+                })
+
+                local Tab = Section:Tab({
+                    Title = "Visual",
+                    Icon = "navigation",
+                    Locked = false,
+                })
+
+                local AntiBaseSection = Tab:Section({
+                    Title = "Anti Base",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                local toggle = Tab:Toggle({
+                    Title = "Base Lock ESP",
+                    Desc = "Show time left to unlock each base",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        baseLockEnabled = state
+                        if state then
+                            enableBaseLockESP()
+                            print("Base Lock ESP Enabled")
+                        else
+                            disableBaseLockESP()
+                            print("Base Lock ESP Disabled")
+                        end
+                    end
+                })
+
+                -- State Management
+                local brainrotHighlight = nil
+                local brainrotDisplayGui = nil
+                local lastUpdate = 0
+                local updateInterval = 0.5
+                local isBrainrotESPActive = false
+
+                -- KPerSecond Parser
+                local function parseKPerSecond(text)
+                    local number = tonumber(text:match("^%$?(%d+%.?%d*)[kKmMbB]?/?[sSxX]?$")) or 0
+                    local multiplier = 1
+                    if text:lower():match("[kK]/?[sSxX]$") then
+                        multiplier = 1000
+                    elseif text:lower():match("[mM]/?[sSxX]$") then
+                        multiplier = 1000000
+                    elseif text:lower():match("[bB]/?[sSxX]$") then
+                        multiplier = 1000000000
+                    end
+                    return number * multiplier
+                end
+
+                -- Find Rarest Brainrot Podium
+                local function findRarestPodium()
+                    local highestKPS = -math.huge
+                    local rarestPodium = nil
+                    local ownPlot = nil
+
+                    local plots = workspace:FindFirstChild("Plots")
+                    if not plots then return nil end
+
+                    for _, plot in pairs(plots:GetChildren()) do
+                        local sign = plot:FindFirstChild("PlotSign")
+                        if sign and sign:FindFirstChild("YourBase") and sign.YourBase.Enabled then
+                            ownPlot = plot
+                            break
+                        end
+                    end
+
+                    for _, plot in pairs(plots:GetChildren()) do
+                        if plot ~= ownPlot then
+                            local animalPodiums = plot:FindFirstChild("AnimalPodiums")
+                            if animalPodiums then
+                                for _, podium in pairs(animalPodiums:GetChildren()) do
+                                    local base = podium:FindFirstChild("Base")
+                                    if base then
+                                        local spawn = base:FindFirstChild("Spawn")
+                                        if spawn then
+                                            local attachment = spawn:FindFirstChild("Attachment")
+                                            if attachment then
+                                                local animalOverhead = attachment:FindFirstChild("AnimalOverhead")
+                                                if animalOverhead then
+                                                    local generation = animalOverhead:FindFirstChild("Generation")
+                                                    if generation then
+                                                        local kps = parseKPerSecond(generation:IsA("TextLabel") and generation.Text or tostring(generation.Value))
+                                                        if kps > highestKPS then
+                                                            highestKPS = kps
+                                                            rarestPodium = podium
+                                                        end
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    return rarestPodium
+                end
+
+                local ESPSection = Tab:Section({
+                    Title = "ESP",
+                    TextXAlignment = "Left",
+                    TextSize = 15,
+                })
+
+                -- Create ESP Visuals
+                local function createBrainrotESP()
+                    if brainrotHighlight then brainrotHighlight:Destroy() end
+                    if brainrotDisplayGui then brainrotDisplayGui:Destroy() end
+
+                    local rarestPodium = findRarestPodium()
+                    if not rarestPodium then return end
+
+                    brainrotHighlight = Instance.new("Highlight")
+                    brainrotHighlight.Parent = rarestPodium
+                    brainrotHighlight.Adornee = rarestPodium
+                    brainrotHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    brainrotHighlight.FillColor = Color3.fromRGB(200, 0, 200)
+                    brainrotHighlight.FillTransparency = 0.5
+                    brainrotHighlight.OutlineColor = Color3.fromRGB(150, 0, 150)
+                    brainrotHighlight.OutlineTransparency = 0
+
+                    local base = rarestPodium:FindFirstChild("Base")
+                    if base then
+                        brainrotDisplayGui = Instance.new("BillboardGui")
+                        brainrotDisplayGui.Name = "BrainrotDisplay"
+                        brainrotDisplayGui.Adornee = base
+                        brainrotDisplayGui.StudsOffset = Vector3.new(0, 3, 0)
+                        brainrotDisplayGui.AlwaysOnTop = true
+                        brainrotDisplayGui.MaxDistance = 0
+                        brainrotDisplayGui.Parent = base
+
+                        local textLabel = Instance.new("TextLabel")
+                        textLabel.Size = UDim2.new(0, 200, 0, 50)
+                        textLabel.BackgroundTransparency = 1
+                        textLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
+                        textLabel.TextStrokeTransparency = 0.5
+                        textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                        textLabel.TextScaled = true
+                        textLabel.Font = Enum.Font.SourceSansBold
+                        textLabel.Text = "Rarest Brainrot"
+                        textLabel.Parent = brainrotDisplayGui
+                    end
+
+                    RunService.Heartbeat:Connect(function(deltaTime)
+                        lastUpdate += deltaTime
+                        if lastUpdate >= updateInterval then
+                            if not rarestPodium:IsDescendantOf(workspace) then
+                                if brainrotHighlight then brainrotHighlight:Destroy() end
+                                if brainrotDisplayGui then brainrotDisplayGui:Destroy() end
+                                return
+                            end
+
+                            local newRarest = findRarestPodium()
+                            if newRarest ~= rarestPodium then
+                                if brainrotHighlight then brainrotHighlight:Destroy() end
+                                if brainrotDisplayGui then brainrotDisplayGui:Destroy() end
+                                createBrainrotESP()
+                            else
+                                if brainrotDisplayGui and base then
+                                    local dist = (workspace.CurrentCamera.CFrame.Position - base.Position).Magnitude
+                                    local scale = math.clamp(dist * 0.1, 4, 16)
+                                    brainrotDisplayGui.Size = UDim2.new(scale, 0, scale * 0.25, 0)
+                                end
+                            end
+                            lastUpdate = 0
+                        end
+                    end)
+                end
+
+                -- Remove ESP
+                local function removeBrainrotESP()
+                    if brainrotHighlight then brainrotHighlight:Destroy() end
+                    if brainrotDisplayGui then brainrotDisplayGui:Destroy() end
+                    brainrotHighlight = nil
+                    brainrotDisplayGui = nil
+                end
+
+                -- GUI Toggle
+                Tab:Toggle({
+                    Title = "Rarest Brainrot ESP",
+                    Desc = "Highlights the rarest Brainrot podium in the server",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        isBrainrotESPActive = state
+                        if state then
+                            createBrainrotESP()
+                        else
+                            removeBrainrotESP()
+                        end
+                        print("Brainrot ESP " .. (state and "Enabled" or "Disabled"))
+                    end
+                })
+
+                Tab:Button({
+                    Title = "TP to Rarest Brainrot",
+                    Desc = "Teleport smoothly to the most valuable brainrot pet",
+                    Locked = false,
+                    Callback = function()
+                        local Players = game:GetService("Players")
+                        local RunService = game:GetService("RunService")
+                        local LocalPlayer = Players.LocalPlayer
+                        local TweenIterations = 120
+                        local VOID = CFrame.new(0, -1e9, 0)
+                        local OFFSET = 0.0025
+                        local DELAY_MIN, DELAY_MAX = 0.001, 0.004
+                        local random = Random.new()
+
+                        local function parseKPS(text)
+                            local number = tonumber(text:match("^%$?(%d+%.?%d*)[kKmMbB]?/?[sSxX]?$")) or 0
+                            local suffix = text:lower():match("[kmb]/?[sx]?$") or ""
+                            local multipliers = { k = 1e3, m = 1e6, b = 1e9 }
+                            return number * (multipliers[suffix:sub(1,1)] or 1)
+                        end
+
+                        local function findRarestPodium()
+                            local highestKPS = -math.huge
+                            local rarest = nil
+                            local ownPlot = nil
+
+                            for _, plot in ipairs(workspace.Plots:GetChildren()) do
+                                local sign = plot:FindFirstChild("PlotSign")
+                                if sign and sign:FindFirstChild("YourBase") and sign.YourBase.Enabled then
+                                    ownPlot = plot
+                                    break
+                                end
+                            end
+
+                            for _, plot in ipairs(workspace.Plots:GetChildren()) do
+                                if plot ~= ownPlot then
+                                    local podiums = plot:FindFirstChild("AnimalPodiums")
+                                    if podiums then
+                                        for _, podium in ipairs(podiums:GetChildren()) do
+                                            local label = podium:FindFirstChild("Base")
+                                                and podium.Base:FindFirstChild("Spawn")
+                                                and podium.Base.Spawn:FindFirstChild("Attachment")
+                                                and podium.Base.Spawn.Attachment:FindFirstChild("AnimalOverhead")
+                                                and podium.Base.Spawn.Attachment.AnimalOverhead:FindFirstChild("Generation")
+
+                                            if label then
+                                                local kps = parseKPS(label:IsA("TextLabel") and label.Text or tostring(label.Value))
+                                                if kps > highestKPS then
+                                                    highestKPS = kps
+                                                    rarest = podium
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+
+                            return rarest
+                        end
+
+                        local function smoothTeleport(targetCFrame)
+                            local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                            if not hrp then return false end
+
+                            for i = 1, TweenIterations do
+                                local t = math.sin((math.pi / 2) * (i / TweenIterations))
+                                local targetPos = hrp.Position:Lerp(targetCFrame.Position, t)
+                                local jitter = Vector3.new(
+                                    random:NextNumber(-OFFSET, OFFSET),
+                                    random:NextNumber(-OFFSET, OFFSET),
+                                    random:NextNumber(-OFFSET, OFFSET)
+                                )
+                                hrp.CFrame = CFrame.new(targetPos + jitter) * (hrp.CFrame - hrp.Position)
+                                task.wait(random:NextNumber(DELAY_MIN, DELAY_MAX))
+                            end
+
+                            for _ = 1, 2 do
+                                hrp.CFrame = VOID
+                                task.wait(0.05)
+                                hrp.CFrame = targetCFrame
+                                task.wait(0.05)
+                            end
+                            return true
+                        end
+
+                        local podium = findRarestPodium()
+                        if podium then
+                            local base = podium:FindFirstChild("Base")
+                            local tpPart = base and base:FindFirstChild("Spawn") or base and base.PrimaryPart
+                            if tpPart and tpPart:IsA("BasePart") then
+                                local success = smoothTeleport(tpPart.CFrame * CFrame.new(0, 3, 0))
+                                game.StarterGui:SetCore("SendNotification", {
+                                    Title = "Brainrot Teleport",
+                                    Text = success and "Teleported to rarest brainrot!" or "Teleport failed.",
+                                    Duration = 3
+                                })
+                            else
+                                warn("Teleport part not found on podium.")
+                            end
+                        else
+                            warn("No rarest brainrot found.")
+                            game.StarterGui:SetCore("SendNotification", {
+                                Title = "Brainrot Teleport",
+                                Text = "No rarest brainrot found.",
+                                Duration = 3
+                            })
+                        end
+                    end,
+                })
+
+                -- ESP control variables
+                local espEnabled = false
+                local espConnections = {}
+                local brainrotESPList = {}
+                local brainrotNames = {
+                    ["Noobini Pizzanini"] = true,
+                    ["Lirilì Larilà"] = true,
+                    ["Tim Cheese"] = true,
+                    ["Fluriflura"] = true,
+                    ["Talpa Di Fero"] = true,
+                    ["Svinina Bombardino"] = true,
+                    ["Pipi Kiwi"] = true
+                }
+
+                -- Main ESP creation
+                local function createESP(model)
+                    if model:FindFirstChild("CommonESP") then return end
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "CommonESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 150, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 255, 102)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    -- Distance update
+                    local player = game:GetService("Players").LocalPlayer
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(brainrotESPList, esp)
+                end
+
+                -- Scan all brainrots
+                local function scanBrainrots()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and brainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                -- Start/Stop ESP
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    -- Clear old ESP
+                    for _, gui in pairs(brainrotESPList) do
+                        if gui and gui.Parent then
+                            gui:Destroy()
+                        end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then
+                            conn:Disconnect()
+                        end
+                    end
+                    brainrotESPList = {}
+                    espConnections = {}
+
+                    if state then
+                        scanBrainrots()
+                    end
+                end
+
+                -- Auto detect future brainrots
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and brainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Common Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Common Brainrot ESP",
+                    Desc = "Toggles ESP for common Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Rare Brainrots only
+                local player = game:GetService("Players").LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local rareBrainrotNames = {
+                    ["Trippi Troppi"] = true,
+                    ["Tung Tung Tung Sahur"] = true,
+                    ["Gangster Footera"] = true,
+                    ["Bandito Bobritto"] = true,
+                    ["Boneca Ambalabu"] = true,
+                    ["Cacto Hipopotamo"] = true,
+                    ["Ta Ta Ta Ta Sahur"] = true,
+                    ["Tric Trac Baraboom"] = true,
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local rareESPList = {}
+
+                -- Create billboard ESP
+                local function createESP(model)
+                    if model:FindFirstChild("RareESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "RareESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 150, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 85, 255)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(rareESPList, esp)
+                end
+
+                -- Scan existing rares
+                local function scanRares()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and rareBrainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                -- Toggle ESP
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    -- Cleanup old
+                    for _, gui in pairs(rareESPList) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    rareESPList = {}
+                    espConnections = {}
+
+                    if state then
+                        scanRares()
+                    end
+                end
+
+                -- Detect new rare Brainrots
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and rareBrainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Rare Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Rare Brainrot ESP",
+                    Desc = "Toggles ESP for rare Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Epic Brainrots only
+                local player = game:GetService("Players").LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local epicBrainrotNames = {
+                    ["Cappuccino Assassino"] = true,
+                    ["Brr Brr Patapim"] = true,
+                    ["Trulimero Trulicina"] = true,
+                    ["Bambini Crostini"] = true,
+                    ["Bananita Dolphinita"] = true,
+                    ["Perochello Lemonchello"] = true,
+                    ["Brri Brri Bicus Dicus Bombicus"] = true,
+                    ["Avocadini Guffo"] = true
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local epicESPList = {}
+
+                local function createESP(model)
+                    if model:FindFirstChild("EpicESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "EpicESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 150, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(85, 170, 255)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(epicESPList, esp)
+                end
+
+                local function scanEpics()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and epicBrainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    for _, gui in pairs(epicESPList) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    epicESPList = {}
+                    espConnections = {}
+
+                    if state then
+                        scanEpics()
+                    end
+                end
+
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and epicBrainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Epic Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Epic Brainrot ESP",
+                    Desc = "Toggle ESP for Epic Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Legendary Brainrots only
+                local player = game:GetService("Players").LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local legendaryBrainrotNames = {
+                    ["Burbaloni Loliloli"] = true,
+                    ["Chimpanzini Bananini"] = true,
+                    ["Ballerina Cappuccina"] = true,
+                    ["Chef Crabracadabra"] = true,
+                    ["Lionel Cactuseli"] = true,
+                    ["Glorbo Fruttodrillo"] = true,
+                    ["Blueberrinni Octopusini"] = true,
+                    ["Strawberelli Flamingelli"] = true,
+                    ["Pandaccini Bananini"] = true
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local espObjects = {}
+
+                local function createESP(model)
+                    if model:FindFirstChild("LegendaryESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "LegendaryESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 160, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 215, 0)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(espObjects, esp)
+                end
+
+                local function scanLegendary()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and legendaryBrainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    for _, gui in pairs(espObjects) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    espObjects = {}
+                    espConnections = {}
+
+                    if state then
+                        scanLegendary()
+                    end
+                end
+
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and legendaryBrainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Legendary Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Legendary Brainrot ESP",
+                    Desc = "Toggle ESP for Legendary Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Mythic Brainrots only
+                local player = game:GetService("Players").Local.LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local mythicBrainrotNames = {
+                    ["Frigo Camelo"] = true,
+                    ["Orangutini Ananassini"] = true,
+                    ["Rhino Toasterino"] = true,
+                    ["Bombardiro Crocodilo"] = true,
+                    ["Bombombini Gusini"] = true,
+                    ["Cavallo Virtuoso"] = true,
+                    ["Spioniro Golubiro"] = true,
+                    ["Zibra Zubra Zibralini"] = true,
+                    ["Tigrilini Watermelini"] = true
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local espObjects = {}
+
+                local function createESP(model)
+                    if model:FindFirstChild("MythicESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "MythicESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 160, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(0, 191, 255)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.new(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(espObjects, esp)
+                end
+
+                local function scanMythic()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and mythicBrainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    for _, gui in pairs(espObjects) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    espObjects = {}
+                    espConnections = {}
+
+                    if state then
+                        scanMythic()
+                    end
+                end
+
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and mythicBrainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Mythic Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Mythic Brainrot ESP",
+                    Desc = "Toggle ESP for Mythic Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Brainrot God NPCs only
+                local player = game:GetService("Players").LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local brainrotGodNames = {
+                    ["Cocofanto Elefanto"] = true,
+                    ["Girafa Celestre"] = true,
+                    ["Gattatino Neonino"] = true,
+                    ["Matteo"] = true,
+                    ["Tralalero Tralala"] = true,
+                    ["Espresso Signora"] = true,
+                    ["Odin Din Din Dun"] = true,
+                    ["Statutino Libertino"] = true,
+                    ["Trenostruzzo Turbo 3000"] = true,
+                    ["Ballerino Lololo"] = true,
+                    ["Lucky Block"] = true,
+                    ["Tigroligre Frutonni"] = true,
+                    ["Orcalero Orcala"] = true
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local espObjects = {}
+
+                local function createESP(model)
+                    if model:FindFirstChild("BrainrotGodESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "BrainrotGodESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 160, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 215, 0)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.new(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(espObjects, esp)
+                end
+
+                local function scanBrainrotGods()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and brainrotGodNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    for _, gui in pairs(espObjects) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    espObjects = {}
+                    espConnections = {}
+
+                    if state then
+                        scanBrainrotGods()
+                    end
+                end
+
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and brainrotGodNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Brainrot God ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Brainrot God ESP",
+                    Desc = "Toggle ESP for Brainrot God NPCs",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+                -- ✅ Secret Brainrots only
+                local player = game:GetService("Players").LocalPlayer
+                local camera = workspace.CurrentCamera
+
+                local secretBrainrotNames = {
+                    ["La Vacca Saturno Saturnita"] = true,
+                    ["Chimpanzini Spiderini"] = true,
+                    ["Los Tralaleritos"] = true,
+                    ["Las Tralaleritas"] = true,
+                    ["Graipuss Medussi"] = true,
+                    ["La Grande Combinasion"] = true,
+                    ["Nuclearo Dinossauro"] = true,
+                    ["Garama and Madundung"] = true,
+                    ["Lucky Block"] = true,
+                    ["Torrtuginni Dragonfrutini"] = true,
+                    ["Pot Hotspot"] = true
+                }
+
+                local espEnabled = false
+                local espConnections = {}
+                local espObjects = {}
+
+                local function createESP(model)
+                    if model:FindFirstChild("SecretESP") then return end
+
+                    local part = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+                    if not part then return end
+
+                    local esp = Instance.new("BillboardGui")
+                    esp.Name = "SecretESP"
+                    esp.Adornee = part
+                    esp.Size = UDim2.new(0, 160, 0, 35)
+                    esp.StudsOffset = Vector3.new(0, 3, 0)
+                    esp.AlwaysOnTop = true
+                    esp.Parent = model
+
+                    local label = Instance.new("TextLabel")
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 255)
+                    label.TextStrokeTransparency = 0.2
+                    label.TextStrokeColor3 = Color3.new(0, 0, 0)
+                    label.Font = Enum.Font.GothamBold
+                    label.TextScaled = true
+                    label.Text = model.Name
+                    label.Parent = esp
+
+                    local conn
+                    conn = game:GetService("RunService").RenderStepped:Connect(function()
+                        if not model:IsDescendantOf(workspace) or not part:IsDescendantOf(model) then
+                            esp:Destroy()
+                            conn:Disconnect()
+                            return
+                        end
+                        local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            local dist = (part.Position - root.Position).Magnitude
+                            label.Text = string.format("%s | %.0f studs", model.Name, dist)
+                        end
+                    end)
+
+                    table.insert(espConnections, conn)
+                    table.insert(espObjects, esp)
+                end
+
+                local function scanSecret()
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and secretBrainrotNames[obj.Name] then
+                            createESP(obj)
+                        end
+                    end
+                end
+
+                local function toggleESP(state)
+                    espEnabled = state
+
+                    for _, gui in pairs(espObjects) do
+                        if gui and gui.Parent then gui:Destroy() end
+                    end
+                    for _, conn in pairs(espConnections) do
+                        if typeof(conn) == "RBXScriptConnection" then conn:Disconnect() end
+                    end
+                    espObjects = {}
+                    espConnections = {}
+
+                    if state then
+                        scanSecret()
+                    end
+                end
+
+                workspace.ChildAdded:Connect(function(obj)
+                    if espEnabled and obj:IsA("Model") and secretBrainrotNames[obj.Name] then
+                        wait(0.2)
+                        createESP(obj)
+                    end
+                end)
+
+                -- 🔘 Secret Brainrot ESP Toggle
+                local Toggle = Tab:Toggle({
+                    Title = "Secret Brainrot ESP",
+                    Desc = "Toggle ESP for Secret Brainrots",
+                    Type = "Toggle",
+                    Default = false,
+                    Callback = function(state)
+                        toggleESP(state)
+                    end
+                })
+
+            end,
+            Variant = "Primary",
+        }
+    }
+})
